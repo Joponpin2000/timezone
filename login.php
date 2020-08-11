@@ -1,92 +1,79 @@
-<!doctype html>
-<html lang="zxx">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Watch shop | eCommers</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+<?php
+//initialize the session
 
-    <!-- CSS here -->
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-        <link rel="stylesheet" href="assets/css/flaticon.css">
-        <link rel="stylesheet" href="assets/css/slicknav.css">
-        <link rel="stylesheet" href="assets/css/animate.min.css">
-        <link rel="stylesheet" href="assets/css/magnific-popup.css">
-        <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
-        <link rel="stylesheet" href="assets/css/themify-icons.css">
-        <link rel="stylesheet" href="assets/css/slick.css">
-        <link rel="stylesheet" href="assets/css/nice-select.css">
-        <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-    <header>
-        <!-- Header Start -->
-        <div class="header-area">
-            <div class="main-header header-sticky">
-                <div class="container-fluid">
-                    <div class="menu-wrapper">
-                        <!-- Logo -->
-                        <div class="logo">
-                            <a href="index.php"><img src="assets/img/logo/logo.png" alt=""></a>
-                        </div>
-                        <!-- Main-menu -->
-                        <div class="main-menu d-none d-lg-block">
-                            <nav>                                                
-                                <ul id="navigation">  
-                                    <li><a href="index.php">Home</a></li>
-                                    <li><a href="shop.php">shop</a></li>
-                                    <li><a href="about.php">about</a></li>
-                                    <li class="hot"><a href="#">Latest</a>
-                                        <ul class="submenu">
-                                            <li><a href="shop.php"> Product list</a></li>
-                                            <li><a href="product_details.php"> Product Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="blog.php">Blog</a>
-                                        <ul class="submenu">
-                                            <li><a href="blog.php">Blog</a></li>
-                                            <li><a href="blog-details.php">Blog Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Pages</a>
-                                        <ul class="submenu">
-                                            <li><a href="login.php">Login</a></li>
-                                            <li><a href="cart.php">Cart</a></li>
-                                            <li><a href="elements.php">Element</a></li>
-                                            <li><a href="confirmation.php">Confirmation</a></li>
-                                            <li><a href="checkout.php">Product Checkout</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="contact.php">Contact</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <!-- Header Right -->
-                        <div class="header-right">
-                            <ul>
-                                <li>
-                                    <div class="nav-search search-switch">
-                                        <span class="flaticon-search"></span>
-                                    </div>
-                                </li>
-                                <li> <a href="login.php"><span class="flaticon-user"></span></a></li>
-                                <li><a href="cart.php"><span class="flaticon-shopping-cart"></span></a> </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Mobile Menu -->
-                    <div class="col-12">
-                        <div class="mobile_menu d-block d-lg-none"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Header End -->
-    </header>
+session_start();
+
+//check if the user is already logged in, if yes then redirect him to welcome page
+if(isset($_SESSION['user']) && isset($_SESSION['id']))
+{
+    header("location: ./");
+    exit;
+}
+
+include_once("functions/DatabaseClass.php");
+
+$database = new DatabaseClass();
+
+//Define variables and initialize with empty values
+$username = $password = "";
+$username_err = $password_err = "";
+
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    //Check if username is empty
+    if(empty(trim($_POST["username"])))
+    {
+        $username_err = "Please enter username.";
+    }
+    else
+    {
+        $username = trim($_POST["username"]);
+    }
+
+    //check if password is empty
+    if(empty(trim($_POST["password"])))
+    {
+        $password_err = "Please enter your password.";
+    }
+    else
+    {
+        $password = trim($_POST["password"]);
+    }
+
+    //validate credentials
+    if(empty($username_err) && empty($password_err))
+    {
+        //prepare a select statement
+        $sql = "SELECT id, username, password FROM users WHERE username = :username AND password = :password";
+        $stmt = $database->Read($sql, ['username' => $username, 'password' => $password]);
+
+        // Check if username exists and corressponds with password
+        if(count($stmt) == 1)
+        {
+            // Password is correct, so start a new session
+            session_start();
+
+            // Store data in session
+            $_SESSION["user"] = true;
+            $_SESSION["id"] = $stmt[0]['id'];
+            $_SESSION["username"] = $stmt[0]['username'];
+
+            // Redirect user to home page
+            header("location: index");
+        }
+        else
+        {
+            $password_err = "The password you entered is not valid.";
+        }
+    }
+}
+
+?>
+    <?php
+        require_once('top.inc.php')
+    ?>
+
     <main>
         <!-- Hero Area Start-->
         <div class="slider-area ">
@@ -113,23 +100,22 @@
                                 <h2>New to our Shop?</h2>
                                 <p>There are advances being made in science and technology
                                     everyday, and a good example of this is the</p>
-                                <a href="#" class="btn_3">Create an Account</a>
+                                <a href="signup.php" class="btn_3">Create an Account</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="login_part_form">
                             <div class="login_part_form_iner">
-                                <h3>Welcome Back ! <br>
-                                    Please Sign in now</h3>
-                                <form class="row contact_form" action="#" method="post" novalidate="novalidate">
+                                <h3>Welcome Back ! <br> Please Sign in now</h3>
+                                <form class="row contact_form" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" role="form" onsubmit="return(validateLogin(this))">
                                     <div class="col-md-12 form-group p_star">
-                                        <input type="text" class="form-control" id="name" name="name" value=""
-                                            placeholder="Username">
+                                        <input type="text" class="form-control" id="name" name="username" value="<?php echo $username; ?>" placeholder="Username">
+                                        <span class="help-block" style="color:red;"><?php echo $username_err; ?></span>
                                     </div>
                                     <div class="col-md-12 form-group p_star">
-                                        <input type="password" class="form-control" id="password" name="password" value=""
-                                            placeholder="Password">
+                                        <input type="password" class="form-control" id="password" name="password" value="<?php echo $password; ?>" placeholder="Password">
+                                            <span class="help-block" style="color:red;"><?php echo $password_err; ?></span>
                                     </div>
                                     <div class="col-md-12 form-group">
                                         <div class="creat_account d-flex align-items-center">
@@ -160,7 +146,7 @@
                             <div class="single-footer-caption mb-30">
                                 <!-- logo -->
                                 <div class="footer-logo">
-                                    <a href="index.php"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
+                                    <a href="index"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
                                 </div>
                                 <div class="footer-tittle">
                                     <div class="footer-pera">
@@ -215,7 +201,7 @@
                     <div class="col-xl-7 col-lg-8 col-md-7">
                         <div class="footer-copy-right">
                             <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> and developed by <a href="http://jofedo.netlify.app" target="_blank">Idowu Joseph</a>
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>               
                         </div>
                     </div>
@@ -223,10 +209,10 @@
                         <div class="footer-copy-right f-right">
                             <!-- social -->
                             <div class="footer-social">
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-behance"></i></a>
-                                <a href="#"><i class="fas fa-globe"></i></a>
+                                <a href=""><i class="fab fa-twitter"></i></a>
+                                <a href=""><i class="fab fa-facebook-f"></i></a>
+                                <a href=""><i class="fab fa-behance"></i></a>
+                                <a href=""><i class="fas fa-globe"></i></a>
                             </div>
                         </div>
                     </div>
@@ -280,6 +266,7 @@
     <!-- Jquery Plugins, main Jquery -->	
     <script src="./assets/js/plugins.js"></script>
     <script src="./assets/js/main.js"></script>
+    <script src="assets/js/custom.js"></script>
 
 </body>
     

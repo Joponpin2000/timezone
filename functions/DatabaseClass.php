@@ -56,7 +56,7 @@ class DatabaseClass
             }
             else
             {
-                echo "Oops! Something went wrong. Please try again later.";
+                die("Oops! Something went wrong. Please try again later.");
             }
         }
     }

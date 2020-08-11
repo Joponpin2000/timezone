@@ -6,7 +6,7 @@ include_once("functions/DatabaseClass.php");
 
 $database = new DatabaseClass();
 
-$limit = 6;
+$limit = 9;
 
 if (isset($_GET['page']))
 {
@@ -23,8 +23,6 @@ $statement = "SELECT * FROM products ORDER BY created_at DESC LIMIT $start_from,
 $products = $database->Read($statement);
 
 ?>
-
-
 
 <?php
 require_once('top.inc.php');
@@ -55,8 +53,6 @@ require_once('top.inc.php');
                         <nav>                                                      
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                 <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">NewestArrivals</a>
-                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false"> Price high to low</a>
-                                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false"> Most populer </a>
                             </div>
                         </nav>
                         <!--End Nav Button  -->
@@ -65,124 +61,26 @@ require_once('top.inc.php');
                     <div class="grid-list-view">
                     </div>
                     <!-- Select items -->
+                    <!--
                     <div class="select-this">
-                        <form action="#">
-                            <!--<div class="select-itms">
-                                <select name="select" id="select1">
-                                    <option value="">40 per page</option>
-                                    <option value="">50 per page</option>
-                                    <option value="">60 per page</option>
-                                    <option value="">70 per page</option>
+                        <form action="latest.html" id="pl" method="POST">
+                            <div class="select-itms">
+                                <select name="page_limit" id="select1" onselect="$('#pl').submit()">
+                                    <option value="6">6 per page</option>
+                                    <option selected="selected" value="9">9 per page</option>
+                                    <option value="12">12 per page</option>
+                                    <option value="15">15 per page</option>
                                 </select>
-                            </div>-->
+                            </div>
                         </form>
                     </div>
+                    -->
                 </div>
                 <!-- Nav Card -->
                 <div class="tab-content" id="nav-tabContent">
-                    <!-- card one -->
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <div class="row">
                             <?php
-                                $statement = "SELECT * FROM products ORDER BY created_at DESC LIMIT $start_from, $limit";
-                                $products = $database->Read($statement);
-
-                                if ($products)
-                                {
-                                    foreach ($products as $product)
-                                    {
-                            ?>
-                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                            <div class="single-popular-items mb-50 text-center">
-                                                <div class="popular-img">
-                                                    <img src="assets/img/gallery/<?php echo $product['image']; ?>" alt="">
-                                                    <a href="
-                                                        <?php
-                                                            if(isset($_SESSION['user']) && isset($_SESSION['id']))
-                                                            {
-                                                                echo "update-cart.php?action=add&id=" . $product['id'] . "";
-                                                            }
-                                                            else
-                                                            {
-                                                                echo "login.php";
-                                                            }
-                                                        ?>
-                                                    ">
-                                                        <div class="img-cap">
-                                                            <span>Add to cart</span>
-                                                        </div>
-                                                    </a>
-                                                    <div class="favorit-items">
-                                                        <span class="flaticon-heart"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="popular-caption">
-                                                    <h3><a href="product_details.php?id=<?php echo $product['id']; ?>"><?php echo $product['name']; ?></a></h3>
-                                                    <span>$ <?php echo number_format($product["price"]); ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                            <?php
-                                    }
-                                }
-                            ?>
-                        </div>
-                    </div>
-                    <!-- Card two -->
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        <div class="row">
-                        <?php
-                                $statement = "SELECT * FROM products ORDER BY price DESC LIMIT $start_from, $limit";
-                                $products = $database->Read($statement);
-
-                                if ($products)
-                                {
-                                    foreach ($products as $product)
-                                    {
-                            ?>
-                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                            <div class="single-popular-items mb-50 text-center">
-                                                <div class="popular-img">
-                                                    <img src="assets/img/gallery/<?php echo $product['image']; ?>" alt="">
-                                                    <a href="
-                                                        <?php
-                                                            if(isset($_SESSION['user']) && isset($_SESSION['id']))
-                                                            {
-                                                                echo "update-cart.php?action=add&id=" . $product['id'] . "";
-                                                            }
-                                                            else
-                                                            {
-                                                                echo "login.php";
-                                                            }
-                                                        ?>
-                                                    ">
-                                                        <div class="img-cap">
-                                                            <span>Add to cart</span>
-                                                        </div>
-                                                    </a>
-                                                    <div class="favorit-items">
-                                                        <span class="flaticon-heart"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="popular-caption">
-                                                    <h3><a href="product_details.php?id=<?php echo $product['id']; ?>"><?php echo $product['name']; ?></a></h3>
-                                                    <span>$ <?php echo number_format($product["price"]); ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                            <?php
-                                    }
-                                }
-                            ?>
-                        </div>
-                    </div>
-                    <!-- Card three -->
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                        <div class="row">
-                            <?php
-                                $statement = "SELECT * FROM products ORDER BY popularity DESC LIMIT $start_from, $limit";
-                                $products = $database->Read($statement);
-
                                 if ($products)
                                 {
                                     foreach ($products as $product)
@@ -226,7 +124,7 @@ require_once('top.inc.php');
                     </div>
                 </div>
                 <!-- End Nav Card -->
-
+                
                 <div>
                     <?php
                         $result_db = "SELECT COUNT(id) FROM products";
@@ -237,16 +135,15 @@ require_once('top.inc.php');
                         for ($i = 1; $i <= $total_pages; $i++)
                         {
                             if ($i == $page)
-                            $pagLink .= "<a class='btn view-btn1' style='margin-right:20px; background-color: grey; color: red;' href='shop.php?page=" . $i . "'>" . $i . "  </a>";
+                            $pagLink .= "<a class='btn view-btn1' style='margin-right:20px; background-color: grey; color: red;' href='latest.php?page=" . $i . "'>" . $i . "  </a>";
                             else
                             {                            
-                                $pagLink .= "<a class='btn view-btn1' style='margin-right:20px' href='shop.php?page=" . $i . "'>" . $i . "  </a>";
+                                $pagLink .= "<a class='btn view-btn1' style='margin-right:20px' href='latest.php?page=" . $i . "'>" . $i . "  </a>";
                             }
                         }
                         echo $pagLink;
                     ?>
                 </div>
-
             </div>
         </section>
         <!-- Latest Products End -->

@@ -2,7 +2,17 @@
 
 session_start();
 
-$cart_total = 0;
+include_once("functions/DatabaseClass.php");
+
+if(!isset($_SESSION['user']) && !isset($_SESSION['id']))
+{
+    header("location: login.php");
+    exit;
+}
+
+$database = new DatabaseClass();
+
+/*$cart_total = 0;
 
 if(isset($_GET['action']))
 {
@@ -76,7 +86,7 @@ if (isset($_POST['submit']))
             }    
         }
     }
-}
+}*/
 
 ?>
 
@@ -85,7 +95,7 @@ if (isset($_POST['submit']))
     require_once('top.inc.php');
 ?>
 
-<main>
+  <main>
       <!-- Hero Area Start-->
       <div class="slider-area ">
           <div class="single-slider slider-height2 d-flex align-items-center">
@@ -103,12 +113,12 @@ if (isset($_POST['submit']))
       <!--================Cart Area =================-->
 
       <?php
-        if (isset($_SESSION['cart_item']))
+        if(isset($_SESSION['cart']))
         {
+          $total = 0;
           $total_quantity = 0;
           $total_price = 0;
-    ?>
-
+      ?>
       <section class="cart_area section_padding">
         <div class="container">
           <div class="cart_inner">
@@ -124,118 +134,118 @@ if (isset($_POST['submit']))
                     </tr>
                 </thead>
                 <tbody>
-                        <?php
-                            foreach ($_SESSION['cart_item'] as $item)
-                            {
-                              $item_price = $item["quantity"] * $item["price"];
+                  <?php
+                    foreach($_SESSION['cart'] as $product_id => $quantity)
+                    {
+                      $product = $database->Read("SELECT * FROM products WHERE id = :id", ['id' => $product_id]);
 
-                        ?>
-                              <tr>
-                                <td>
-                                  <div class="media">
-                                      <div class="d-flex">
-                                      <img src="assets/img/gallery/<?php echo $item['image']; ?>" alt="product image" />
-                                      </div>
-                                      <div class="media-body">
-                                      <p><?php echo $item['name']; ?></p>
-                                      </div>
-                                  </div>
-                                </td>
-                                <td>
-                                  <h5>$<?php echo number_format($item["price"]); ?></h5>
-                                </td>
-                                <form method="POST" action="<?php echo
-                                    htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                    <td>
-                                        <div class="product_count">
-                                            <input class="input-number" type="text" name="quantity" value="<?php echo $item["quantity"] ?>" min="0" max="10" /><br />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <h5>$<?php echo number_format($item_price); ?></h5>
-                                    </td>
-                                    <td>
-                                        <h5>
-                                        <span class="btn_1">
-                                                <input type="hidden" name="code" value="<?php echo $item["id"]; ?>" />
-                                                <input type="submit" name="submit" style="background-color: transparent; border: none; color: inherit" value="UPDATE CART" />
-                                            </span>
-                                            <a href="cart.php?action=remove&code=<?php echo $item["id"]; ?>" class="btnRemoveAction">
-                                                <i class="fa fa-trash" style="color: red; margin: 0 10px;"></i>
-                                            </a>
-                                        </h5>
-                                    </td>
-                                </form>
-                              </tr>
-                        <?php
-                              $total_quantity +=$item["quantity"];
-                              $total_price += ($item["price"] * $item["quantity"]);
-                            }
-                        ?>
-                        <tr class="bottom_button">
-                            <td></td>
-                            <td></td>
-                            <td>
-                            <div class="cupon_text float-right">
-                                <a href="cart.php?action=empty" class="btn_1" >Empty Cart</a>
+                      $cost = $product[0]['price'] * $quantity; //work out the line cost
+                      $total = $total + $cost; //add to the total cost
+                  ?>
+                      <tr>
+                        <td>
+                          <div class="media">
+                            <div class="d-flex">
+                              <img src="assets/img/gallery/<?php echo $product[0]['image']; ?>" alt="product image" />
                             </div>
+                            <div class="media-body">
+                              <p><?php echo $product[0]['name']; ?></p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <h5>$<?php echo number_format($product[0]['price']); ?></h5>
+                        </td>
+                        <form method="POST" action="<?php echo
+                            htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                            <td>
+                                <div class="product_count">
+                                    <input class="input-number" type="text" name="quantity" value="<?php echo $quantity ?>" min="0" max="10" /><br />
+                                </div>
                             </td>
-                        </tr>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                      <h5>Subtotal</h5>
-                    </td>
-                    <td>
-                      <h5>$<?php echo number_format($total_price); ?></h5>
-                    </td>
-                  </tr>
-                  <tr class="shipping_area">
-                    <td></td>
-                    <td></td>
-                    <td>
-                      <h5>Shipping</h5>
-                    </td>
-                    <td>
-                      <div class="shipping_box">
-                        <ul class="list">
-                          <li>
-                            Flat Rate: $5.00
-                            <input type="radio" aria-label="Radio button for following text input">
-                          </li>
-                          <li>
-                            Free Shipping
-                            <input type="radio" aria-label="Radio button for following text input">
-                          </li>
-                          <li>
-                            Flat Rate: $10.00
-                            <input type="radio" aria-label="Radio button for following text input">
-                          </li>
-                          <li class="active">
-                            Local Delivery: $2.00
-                            <input type="radio" aria-label="Radio button for following text input">
-                          </li>
-                        </ul>
-                        <h6>
-                          Calculate Shipping
-                          <i class="fa fa-caret-down" aria-hidden="true"></i>
-                        </h6>
-                        <select class="shipping_select">
-                          <option value="1">Bangladesh</option>
-                          <option value="2">India</option>
-                          <option value="4">Pakistan</option>
-                        </select>
-                        <select class="shipping_select section_bg">
-                          <option value="1">Select a State</option>
-                          <option value="2">Select a State</option>
-                          <option value="4">Select a State</option>
-                        </select>
-                        <input class="post_code" type="text" placeholder="Postcode/Zipcode" />
-                        <a class="btn_1" href="#">Update Details</a>
-                      </div>
-                    </td>
-                  </tr>
+                            <td>
+                                <h5>$<?php echo number_format(0000000); ?></h5>
+                            </td>
+                            <td>
+                                <h5>
+                                <span class="btn_1">
+                                        <input type="hidden" name="code" value="<?php echo $product[0]['id']; ?>" />
+                                        <input type="submit" name="submit" style="background-color: transparent; border: none; color: inherit" value="UPDATE CART" />
+                                    </span>
+                                    <a href="update-cart.php?action=remove&id=<?php echo $product[0]['id']; ?>" class="btnRemoveAction">
+                                        <i class="fa fa-trash" style="color: red; margin: 0 10px;"></i>
+                                    </a>
+                                </h5>
+                            </td>
+                        </form>
+                      </tr>
+                  <?php
+                        $total_quantity +=$quantity;
+                        $total_price += ($product[0]['price'] * $quantity);
+                    }
+                  ?>     
+                    <tr class="bottom_button">
+                      <td>
+                        <div class="cupon_text float-right">
+                            <a href="update-cart.php?action=empty" class="btn_1" >Empty Cart</a>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <h5>Subtotal</h5>
+                      </td>
+                      <td>
+                        <h5>$<?php echo number_format($total_price); ?></h5>
+                      </td>
+                    </tr>
+                    <tr class="shipping_area">
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <div class="shipping_box">
+                          <ul class="list">
+                            <li>
+                              Flat Rate: $5.00
+                              <input type="radio" aria-label="Radio button for following text input">
+                            </li>
+                            <li>
+                              Free Shipping
+                              <input type="radio" aria-label="Radio button for following text input">
+                            </li>
+                            <li>
+                              Flat Rate: $10.00
+                              <input type="radio" aria-label="Radio button for following text input">
+                            </li>
+                            <li class="active">
+                              Local Delivery: $2.00
+                              <input type="radio" aria-label="Radio button for following text input">
+                            </li>
+                          </ul>
+                          <h6>
+                            Calculate Shipping
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </h6>
+                          <select class="shipping_select">
+                            <option value="1">Bangladesh</option>
+                            <option value="2">India</option>
+                            <option value="4">Pakistan</option>
+                          </select>
+                          <select class="shipping_select section_bg">
+                            <option value="1">Select a State</option>
+                            <option value="2">Select a State</option>
+                            <option value="4">Select a State</option>
+                          </select>
+                          <input class="post_code" type="text" placeholder="Postcode/Zipcode" />
+                          <a class="btn_1" href="#">Update Details</a>
+                        </div>
+                      </td>
+                    </tr>
                 </tbody>
               </table>
               <div class="checkout_btn_inner float-right">
@@ -248,14 +258,18 @@ if (isset($_POST['submit']))
       <!--================End Cart Area =================-->
   </main>
   <?php
-        }
+    }
         else
         {
     ?>
-            <div class="container" style="height: 20vh;">
+            <div class="container" style="margin-top: 50px; height: 20vh;">
                 <div class="row">
+                  <div class="col-md-12" style="margin-bottom: 50px;">
                     <h3 style="opacity: 0.5;">Your Cart is empty!</h3>
+                  </div>
+                  <div class="col-md-12">
                     <a class="btn_1" href="shop.php">Continue Shopping</a>
+                  </div>
                 </div>
             </div>
     <?php
@@ -271,7 +285,7 @@ if (isset($_POST['submit']))
                           <div class="single-footer-caption mb-30">
                               <!-- logo -->
                               <div class="footer-logo">
-                                  <a href="index.php"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
+                                  <a href="index"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
                               </div>
                               <div class="footer-tittle">
                                   <div class="footer-pera">
@@ -326,7 +340,7 @@ if (isset($_POST['submit']))
                   <div class="col-xl-7 col-lg-8 col-md-7">
                       <div class="footer-copy-right">
                           <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> and developed by <a href="http://jofedo.netlify.app" target="_blank">Idowu Joseph</a>
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>                 
                       </div>
                   </div>

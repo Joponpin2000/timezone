@@ -1,9 +1,9 @@
 <!doctype html>
-<html class="no-js" lang="zxx">
+<html class="no-js" lang="eng">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Watch shop | eCommers</title>
+    <title>Watch shop | Ecommerce</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="site.webmanifest">
@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    <!-- Preloader Start -->
+    <!-- Preloader Ends -->
     <header>
         <!-- Header Start -->
         <div class="header-area">
@@ -44,37 +44,27 @@
                     <div class="menu-wrapper">
                         <!-- Logo -->
                         <div class="logo">
-                            <a href="index.php"><img src="assets/img/logo/logo.png" alt=""></a>
+                            <a href="./"><img src="assets/img/logo/logo.png" alt=""></a>
                         </div>
                         <!-- Main-menu -->
                         <div class="main-menu d-none d-lg-block">
                             <nav>                                                
                                 <ul id="navigation">  
-                                    <li><a href="index.php">Home</a></li>
+                                    <li><a href="./">Home</a></li>
                                     <li><a href="shop.php">shop</a></li>
                                     <li><a href="about.php">about</a></li>
-                                    <li class="hot"><a href="#">Latest</a>
-                                        <ul class="submenu">
-                                            <li><a href="shop.php"> Product list</a></li>
-                                            <li><a href="product_details.php"> Product Details</a></li>
-                                        </ul>
+                                    <li class="hot"><a href="latest.php">Latest</a>
                                     </li>
-                                    <li><a href="blog.php">Blog</a>
-                                        <ul class="submenu">
-                                            <li><a href="blog.php">Blog</a></li>
-                                            <li><a href="blog-details.php">Blog Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Pages</a>
-                                        <ul class="submenu">
-                                            <li><a href="login.php">Login</a></li>
-                                            <li><a href="cart.php">Cart</a></li>
-                                            <li><a href="elements.php">Element</a></li>
-                                            <li><a href="confirmation.php">Confirmation</a></li>
-                                            <li><a href="checkout.php">Product Checkout</a></li>
-                                        </ul>
-                                    </li>
+                                    <li><a href="blog.php">Blog</a></li>
                                     <li><a href="contact.php">Contact</a></li>
+                                    <?php
+                                        if(isset($_SESSION['user']) && isset($_SESSION['id']))
+                                        {
+                                    ?>   
+                                            <li><a href="functions/logout.php">Logout</a></li>
+                                    <?php
+                                        }
+                                    ?>
                                 </ul>
                             </nav>
                         </div>
@@ -86,8 +76,43 @@
                                         <span class="flaticon-search"></span>
                                     </div>
                                 </li>
-                                <li> <a href="login.php"><span class="flaticon-user"></span></a></li>
-                                <li><a href="cart.php"><span class="flaticon-shopping-cart"></span></a> </li>
+                                <?php
+                                    if(isset($_SESSION['user']) && isset($_SESSION['id']))
+                                    {
+                                ?>
+                                        <li>
+                                            <a href="cart.php"><span class="flaticon-shopping-cart">
+                                                <sup style="color: red">
+                                                    <?php
+                                                        if (isset($_SESSION['cart']) && $_SESSION['cart'] > 0)
+                                                        {
+                                                            echo count($_SESSION['cart']);
+                                                        }
+                                                        else
+                                                        {
+                                                            echo 0;
+                                                        }
+                                                    ?>
+                                                 </sup>
+                                             </span>
+                                         </a> 
+                                     </li>
+                                <?php
+                                    }
+                                    else
+                                    {
+                                ?>
+                                        <li> <a href="login.php"><span class="flaticon-user"></span></a></li>
+                                        <li>
+                                            <a href="login.php">
+                                                <span class="flaticon-shopping-cart">
+                                                    <sup style="color: red">0</sup>
+                                                 </span>
+                                             </a> 
+                                         </li>
+                                <?php
+                                    }
+                                ?>
                             </ul>
                         </div>
                     </div>

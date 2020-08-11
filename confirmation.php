@@ -1,9 +1,15 @@
+<?php
+
+session_start();
+
+?>
+
 <!doctype html>
-<html lang="zxx">
+<html lang="eng">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Watch shop | eCommers</title>
+  <title>Watch shop | Ecommerce</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="site.webmanifest">
@@ -28,62 +34,87 @@
     <!-- Header Start -->
     <div class="header-area">
         <div class="main-header header-sticky">
-            <div class="container-fluid">
-                <div class="menu-wrapper">
-                    <!-- Logo -->
-                    <div class="logo">
-                        <a href="index.php"><img src="assets/img/logo/logo.png" alt=""></a>
-                    </div>
-                    <!-- Main-menu -->
-                    <div class="main-menu d-none d-lg-block">
-                        <nav>                                                
-                            <ul id="navigation">  
-                                <li><a href="index.php">Home</a></li>
-                                <li><a href="shop.php">shop</a></li>
-                                <li><a href="about.php">about</a></li>
-                                <li class="hot"><a href="#">Latest</a>
-                                    <ul class="submenu">
-                                        <li><a href="shop.php"> Product list</a></li>
-                                        <li><a href="product_details.php"> Product Details</a></li>
-                                    </ul>
+                <div class="container-fluid">
+                    <div class="menu-wrapper">
+                        <!-- Logo -->
+                        <div class="logo">
+                            <a href="./"><img src="assets/img/logo/logo.png" alt=""></a>
+                        </div>
+                        <!-- Main-menu -->
+                        <div class="main-menu d-none d-lg-block">
+                            <nav>                                                
+                                <ul id="navigation">  
+                                    <li><a href="./">Home</a></li>
+                                    <li><a href="shop.php">shop</a></li>
+                                    <li><a href="about.php">about</a></li>
+                                    <li class="hot"><a href="latest.php">Latest</a>
+                                    </li>
+                                    <li><a href="blog.php">Blog</a></li>
+                                    <li><a href="contact.php">Contact</a></li>
+                                    <?php
+                                        if(isset($_SESSION['user']) && isset($_SESSION['id']))
+                                        {
+                                    ?>   
+                                            <li><a href="functions/logout.php">Logout</a></li>
+                                    <?php
+                                        }
+                                    ?>
+                                </ul>
+                            </nav>
+                        </div>
+                        <!-- Header Right -->
+                        <div class="header-right">
+                            <ul>
+                                <li>
+                                    <div class="nav-search search-switch">
+                                        <span class="flaticon-search"></span>
+                                    </div>
                                 </li>
-                                <li><a href="blog.php">Blog</a>
-                                    <ul class="submenu">
-                                        <li><a href="blog.php">Blog</a></li>
-                                        <li><a href="blog-details.php">Blog Details</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Pages</a>
-                                    <ul class="submenu">
-                                        <li><a href="login.php">Login</a></li>
-                                        <li><a href="cart.php">Cart</a></li>
-                                        <li><a href="elements.php">Element</a></li>
-                                        <li><a href="confirmation.php">Confirmation</a></li>
-                                        <li><a href="checkout.php">Product Checkout</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="contact.php">Contact</a></li>
+                                <?php
+                                    if(isset($_SESSION['user']) && isset($_SESSION['id']))
+                                    {
+                                ?>
+                                        <li>
+                                            <a href="cart.php"><span class="flaticon-shopping-cart">
+                                                <sup style="color: red">
+                                                    <?php
+                                                        if (isset($_SESSION['cart']) && $_SESSION['cart'] > 0)
+                                                        {
+                                                            echo count($_SESSION['cart']);
+                                                        }
+                                                        else
+                                                        {
+                                                            echo 0;
+                                                        }
+                                                    ?>
+                                                 </sup>
+                                             </span>
+                                         </a> 
+                                     </li>
+                                <?php
+                                    }
+                                    else
+                                    {
+                                ?>
+                                        <li> <a href="login.php"><span class="flaticon-user"></span></a></li>
+                                        <li>
+                                            <a href="login.php">
+                                                <span class="flaticon-shopping-cart">
+                                                    <sup style="color: red">0</sup>
+                                                 </span>
+                                             </a> 
+                                         </li>
+                                <?php
+                                    }
+                                ?>
                             </ul>
-                        </nav>
+                        </div>
                     </div>
-                    <!-- Header Right -->
-                    <div class="header-right">
-                        <ul>
-                            <li>
-                                <div class="nav-search search-switch">
-                                    <span class="flaticon-search"></span>
-                                </div>
-                            </li>
-                            <li> <a href="login.php"><span class="flaticon-user"></span></a></li>
-                            <li><a href="cart.php"><span class="flaticon-shopping-cart"></span></a> </li>
-                        </ul>
+                    <!-- Mobile Menu -->
+                    <div class="col-12">
+                        <div class="mobile_menu d-block d-lg-none"></div>
                     </div>
                 </div>
-                <!-- Mobile Menu -->
-                <div class="col-12">
-                    <div class="mobile_menu d-block d-lg-none"></div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- Header End -->
@@ -231,7 +262,7 @@
                         <div class="single-footer-caption mb-30">
                             <!-- logo -->
                             <div class="footer-logo">
-                                <a href="index.php"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
+                                <a href="index"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
                             </div>
                             <div class="footer-tittle">
                                 <div class="footer-pera">
@@ -286,7 +317,7 @@
                 <div class="col-xl-7 col-lg-8 col-md-7">
                     <div class="footer-copy-right">
                         <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> and developed by <a href="http://jofedo.netlify.app" target="_blank">Idowu Joseph</a>
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>                 
                     </div>
                 </div>

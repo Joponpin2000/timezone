@@ -6,46 +6,6 @@ include_once("functions/DatabaseClass.php");
 
 $database = new DatabaseClass();
 
-if (isset($_GET['action']) && isset($_GET['code']) && isset($_GET['quantity']) && is_numeric($_GET['quantity'])) {
-    switch ($_GET['action']) 
-    {
-        case 'add':
-            if(!empty($_GET['quantity']))
-            {
-                $productById = $database->Read("SELECT * FROM products WHERE id = :id", ['id' => $_GET['code']]);
-                $itemArray = array($productById[0]['id']=>array('name' => $productById[0]['name'], 'id' => $productById[0]['id'], 'quantity' => $_GET['quantity'], 'price' => $productById[0]['price'], 'image' => $productById[0]['image']));
-
-                if (!empty($_SESSION["cart_item"])) 
-                {
-                    if (in_array($productById[0]["id"], array_keys($_SESSION["cart_item"]))) 
-                    {
-                        foreach ($_SESSION['cart_item'] as $k => $v)
-                        {
-                            if ($productById[0]['id'] == $k) 
-                            {
-                                if (empty($_SESSION['cart_item'][$k]['quantity']))
-                                {
-                                    $_SESSION['cart'][$k]['quantity'] = 0;
-                                }
-                                $_SESSION['cart_item'][$k]['quantity'] += $_GET["quantity"];
-                            }
-                        }
-                    }
-                    else
-                    {
-                        $_SESSION["cart_item"] = array_merge($_SESSION["cart_item"], $itemArray);
-                    }
-                }
-                else
-                {
-                    $_SESSION["cart_item"] = $itemArray;
-                }
-            }
-            break;
-    }
-
-}
-
 ?>
 
     <?php
@@ -66,7 +26,7 @@ if (isset($_GET['action']) && isset($_GET['code']) && isset($_GET['quantity']) &
                                     <p data-animation="fadeInLeft" data-delay=".7s" data-duration="2000ms">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat is aute irure.</p>
                                     <!-- Hero-btn -->
                                     <div class="hero__btn" data-animation="fadeInLeft" data-delay=".8s" data-duration="2000ms">
-                                        <a href="shop.php" class="btn hero-btn">Shop Now</a>
+                                        <a href="shop" class="btn hero-btn">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -163,7 +123,18 @@ if (isset($_GET['action']) && isset($_GET['code']) && isset($_GET['quantity']) &
                                 <div class="single-popular-items mb-50 text-center">
                                     <div class="popular-img">
                                         <img src="assets/img/gallery/<?php echo $product['image']; ?>" alt="">
-                                        <a href="index.php?action=add&code=<?php echo $product['id']; ?>&quantity=1">
+                                        <a href="
+                                            <?php
+                                                if(isset($_SESSION['user']) && isset($_SESSION['id']))
+                                                {
+                                                    echo "update-cart.php?action=add&id=" . $product['id'] . "";
+                                                }
+                                                else
+                                                {
+                                                    echo "login.php";
+                                                }
+                                            ?>
+                                        ">
                                             <div class="img-cap">
                                                 <span>Add to cart</span>
                                             </div>

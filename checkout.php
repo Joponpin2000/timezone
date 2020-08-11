@@ -2,6 +2,12 @@
 
 session_start();
 
+if(!isset($_SESSION['user']) && !isset($_SESSION['id']))
+{
+    header("location: login.php");
+    exit;
+}
+
 include_once("functions/DatabaseClass.php");
 
 $coupon = false;
@@ -103,11 +109,19 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
         && (empty($country_err) && empty($city_err))
         && (empty($address_err) && empty($zip_err)))
     {
-      $amount = trim($_GET['amount']);
+
+      echo "<script>alert('Thanks for your patronage. Orders will be placed!')</script>";
+
+
+      $amount = trim($_POST['amount']);
       $name = $firstname . ' ' . $lastname; 
       $sql = "INSERT INTO shipping_details (name, email, phone, country, city, address, zip, notes) VALUES (:name, :email, :phone, :country, :city, :address, :zip, :notes)";
       $details = $database->Insert($sql, ['name' => $name, 'email' => $email, 'phone' => $phone, 'country' => $country, 'city' => $city, 'address' =>$address, 'zip' => $zip, 'notes'=> $notes]);
-      header('location: functions/initialize.php?email=' . $email . '&amount=' . $amount);
+
+      //continue to paypal
+      /*header('location: functions/initialize.php?email=' . $email . '&amount=' . $amount);*/
+
+      header('location: index');
     }
   }
 }
@@ -133,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
     </div>
     <!--================Checkout Area =================-->
     <?php
-      if (isset($_SESSION['cart_item']))
+      if (isset($_SESSION['cart']))
       {
         $total_quantity = 0;
         $total_price = 0;
@@ -283,18 +297,20 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                         </a>
                       </li>
                       <?php
-                        foreach ($_SESSION['cart_item'] as $item)
+                        foreach ($_SESSION['cart'] as $product => $quantity)
                         {
-                          $item_price = $item["quantity"] * $item["price"];
+                          $item = $database->Read("SELECT * FROM products WHERE id = :id", ['id' => $product]);
+
+                          $item_price = $quantity * $item[0]["price"];
                       ?>
                         <li>
-                          <a href="#"> <?php echo $item["name"] ; ?>
-                            <span class="middle">x <?php echo $item["quantity"] ; ?></span>
+                          <a href="#"> <?php echo $item[0]["name"] ; ?>
+                            <span class="middle">x <?php echo $quantity ; ?></span>
                             <span class="last">$<?php echo number_format($item_price); ?></span>
                           </a>
                         </li>
                       <?php
-                          $total_quantity +=$item["quantity"];
+                          $total_quantity +=$quantity;
                           $total_price += $item_price;
                         }
                       ?>
@@ -381,7 +397,7 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                             <div class="single-footer-caption mb-30">
                                 <!-- logo -->
                                 <div class="footer-logo">
-                                    <a href="index.php"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
+                                    <a href="index"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
                                 </div>
                                 <div class="footer-tittle">
                                     <div class="footer-pera">
@@ -436,7 +452,7 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                     <div class="col-xl-7 col-lg-8 col-md-7">
                         <div class="footer-copy-right">
                             <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> and developed by <a href="http://jofedo.netlify.app" target="_blank">Idowu Joseph</a>
                                 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>                   
                                           </div>
                                       </div>
@@ -445,10 +461,10 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                         <div class="footer-copy-right f-right">
                             <!-- social -->
                             <div class="footer-social">
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-behance"></i></a>
-                                <a href="#"><i class="fas fa-globe"></i></a>
+                                <a href=""><i class="fab fa-twitter"></i></a>
+                                <a href=""><i class="fab fa-facebook-f"></i></a>
+                                <a href=""><i class="fab fa-behance"></i></a>
+                                <a href=""><i class="fas fa-globe"></i></a>
                             </div>
                         </div>
                     </div>

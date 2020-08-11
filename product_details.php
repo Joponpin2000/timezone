@@ -12,7 +12,7 @@ if(isset($_GET['id']))
 
     $product = $database->Read($statement, ['id' => $id]);
 
-    if (isset($_GET['action'])) 
+    /*if (isset($_GET['action'])) 
     {
         switch ($_GET['action'])
         {
@@ -51,6 +51,7 @@ if(isset($_GET['id']))
         break;
         }
     }
+    */
 }
 ?>
 
@@ -94,16 +95,36 @@ require_once('top.inc.php')
                         <div class="card_area">
                             <form action="product_details.php?action=add&id=<?php echo $product[0]['id']; ?>" method="POST">
                                 <div class="product_count_area">
+                                    <!--
                                     <p class="col-sm-2">Quantity</p>
                                     <div class="product_count d-inline-block">
-                                        <span class="product_count_item inumber-decrement"> <i class="ti-minus"></i></span>
-                                        <input class="product_count_item input-number" name="quantity" type="text" value="1" min="0" max="10">
-                                        <span class="product_count_item number-increment"> <i class="ti-plus"></i></span>
-                                    </div>
-                                    <p class="col-sm-2">x $<?php echo number_format($product[0]['price']) ?></p>
+                                        <span class="product_count_item inumber-decrement"> 
+                                            <i class="ti-minus"></i>
+                                        </span>
+                                            <a style="padding:5px; color: inherit;" href="update-cart.php?action=add&id=<?php echo $product[0]['id']; ?>">
+                                                <i class="ti-minus"></i>
+                                            </a>
+                                        <input class="product_count_item input-number" name="quantity" type="text" value="1" min="0" max="10" disabled="disabled">
+                                        <!--<span class="product_count_item number-increment"> <i class="ti-plus"></i></span>
+                                        <a style="padding:5px; color: inherit;" href="update-cart.php?action=remove&id=<?php echo $product[0]['id']; ?>">
+                                            <i class="ti-plus"></i>
+                                        </a>
+                                    </div>-->
+                                    <p class="col-sm-2"> $<?php echo number_format($product[0]['price']) ?></p>
                                 </div>
                                 <div class="add_to_cart">
-                                    <input type="submit" value="ADD TO CART"  class="btn_3" />
+                                    <a href="
+                                        <?php
+                                            if(isset($_SESSION['user']) && isset($_SESSION['id']))
+                                            {
+                                                echo "update-cart.php?action=add&id=" . $product[0]['id'] . "";
+                                            }
+                                            else
+                                            {
+                                                echo "login.php";
+                                            }
+                                        ?>
+                                    " class="btn_3" >ADD TO CART</a>  
                                 </div>
                             </form>
                         </div>
