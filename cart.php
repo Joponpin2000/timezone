@@ -117,7 +117,6 @@ if (isset($_POST['submit']))
         {
           $total = 0;
           $total_quantity = 0;
-          $total_price = 0;
       ?>
       <section class="cart_area section_padding">
         <div class="container">
@@ -164,7 +163,7 @@ if (isset($_POST['submit']))
                                 </div>
                             </td>
                             <td>
-                                <h5>$<?php echo number_format(0000000); ?></h5>
+                                <h5>$<?php echo number_format($cost); ?></h5>
                             </td>
                             <td>
                                 <h5>
@@ -181,7 +180,6 @@ if (isset($_POST['submit']))
                       </tr>
                   <?php
                         $total_quantity +=$quantity;
-                        $total_price += ($product[0]['price'] * $quantity);
                     }
                   ?>     
                     <tr class="bottom_button">
@@ -198,7 +196,7 @@ if (isset($_POST['submit']))
                         <h5>Subtotal</h5>
                       </td>
                       <td>
-                        <h5>$<?php echo number_format($total_price); ?></h5>
+                        <h5>$<?php echo number_format($total); ?></h5>
                       </td>
                     </tr>
                     <tr class="shipping_area">
@@ -231,6 +229,7 @@ if (isset($_POST['submit']))
                             Calculate Shipping
                             <i class="fa fa-caret-down" aria-hidden="true"></i>
                           </h6>
+                        <!--
                           <select class="shipping_select">
                             <option value="1">Bangladesh</option>
                             <option value="2">India</option>
@@ -243,6 +242,7 @@ if (isset($_POST['submit']))
                           </select>
                           <input class="post_code" type="text" placeholder="Postcode/Zipcode" />
                           <a class="btn_1" href="#">Update Details</a>
+                        -->
                         </div>
                       </td>
                     </tr>
@@ -348,10 +348,10 @@ if (isset($_POST['submit']))
                       <div class="footer-copy-right f-right">
                           <!-- social -->
                           <div class="footer-social">
-                              <a href="#"><i class="fab fa-twitter"></i></a>
-                              <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                              <a href="#"><i class="fab fa-behance"></i></a>
-                              <a href="#"><i class="fas fa-globe"></i></a>
+                              <a href=""><i class="fab fa-twitter"></i></a>
+                              <a href=""><i class="fab fa-facebook-f"></i></a>
+                              <a href=""><i class="fab fa-behance"></i></a>
+                              <a href=""><i class="fas fa-globe"></i></a>
                           </div>
                       </div>
                   </div>

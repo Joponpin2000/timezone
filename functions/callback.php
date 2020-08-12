@@ -25,13 +25,13 @@ if ($err) {
 
 $tranx = json_decode($response);
 
-if(!tranx->status)
+if(!$tranx->status)
 {
 	die('API returned error: ' . $tranx->message);
 }
 
 if ('success' == $tranx->data->status) {
-	echo "<h2>Thank you for making a purchase. Your file has been sent to your email.</h2><a class="btn_1" href="shop.php">Continue Shopping</a>";
+	echo "<h2>Thank you for making a purchase. Your file has been sent to your email.</h2><a class='btn_1' href='shop.php'>Continue Shopping</a>";
 }
 
 ?>

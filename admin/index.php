@@ -59,7 +59,7 @@ if(!isset($_SESSION['admin']))
             </div>
             <ul class="list-unstyled components">
                 <li>
-                    <a class="active">Product</a>
+                    <a href="product.php">Product</a>
                 </li>
                 <li>
                     <a href="users.php">Users</a>

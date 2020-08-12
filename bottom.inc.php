@@ -55,10 +55,10 @@
                             <div class="footer-tittle">
                                 <h4>Support</h4>
                                 <ul>
-                                    <li><a href="#">Frequently Asked Questions</a></li>
-                                    <li><a href="#">Terms & Conditions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Report a Payment Issue</a></li>
+                                    <li><a href="">Frequently Asked Questions</a></li>
+                                    <li><a href="">Terms & Conditions</a></li>
+                                    <li><a href="">Privacy Policy</a></li>
+                                    <li><a href="">Report a Payment Issue</a></li>
                                 </ul>
                             </div>
                         </div>

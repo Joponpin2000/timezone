@@ -1,7 +1,10 @@
 <?php
- 
+
 session_start();
 
+include_once("functions/DatabaseClass.php");
+
+$database = new DatabaseClass();
 ?>
 
 <!doctype html>
@@ -247,10 +250,10 @@ session_start();
                             <div class="footer-tittle">
                                 <h4>Quick Links</h4>
                                 <ul>
-                                    <li><a href="#">About</a></li>
-                                    <li><a href="#"> Offers & Discounts</a></li>
-                                    <li><a href="#"> Get Coupon</a></li>
-                                    <li><a href="#">  Contact Us</a></li>
+                                    <li><a href="">About</a></li>
+                                    <li><a href=""> Offers & Discounts</a></li>
+                                    <li><a href=""> Get Coupon</a></li>
+                                    <li><a href="">  Contact Us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -260,10 +263,16 @@ session_start();
                             <div class="footer-tittle">
                                 <h4>New Products</h4>
                                 <ul>
-                                    <li><a href="#">Woman Cloth</a></li>
-                                    <li><a href="#">Fashion Accessories</a></li>
-                                    <li><a href="#"> Man Accessories</a></li>
-                                    <li><a href="#"> Rubber made Toys</a></li>
+                                    <?php
+                                        $statement = "SELECT * FROM products ORDER BY created_at DESC LIMIT 0, 4";
+                                        $products = $database->Read($statement);
+                                        foreach ($products as $product)
+                                        {
+                                    ?>
+                                        <li><a href="product_details?id=<?php echo $product['id']; ?>"><?php echo $product['name']; ?></a></li>
+                                    <?php
+                                        }
+                                    ?>
                                 </ul>
                             </div>
                         </div>
@@ -273,10 +282,10 @@ session_start();
                             <div class="footer-tittle">
                                 <h4>Support</h4>
                                 <ul>
-                                    <li><a href="#">Frequently Asked Questions</a></li>
-                                    <li><a href="#">Terms & Conditions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Report a Payment Issue</a></li>
+                                    <li><a href="">Frequently Asked Questions</a></li>
+                                    <li><a href="">Terms & Conditions</a></li>
+                                    <li><a href="">Privacy Policy</a></li>
+                                    <li><a href="">Report a Payment Issue</a></li>
                                 </ul>
                             </div>
                         </div>

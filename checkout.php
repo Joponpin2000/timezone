@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
         && (empty($country_err) && empty($city_err))
         && (empty($address_err) && empty($zip_err)))
     {
-
+      unset($_SESSION['cart']);
       echo "<script>alert('Thanks for your patronage. Orders will be placed!')</script>";
 
 
@@ -120,15 +120,13 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
 
       //continue to paypal
       /*header('location: functions/initialize.php?email=' . $email . '&amount=' . $amount);*/
-
-      header('location: index');
     }
   }
 }
 
 ?>
     <?php
-        require_once('top.inc.php')
+        require_once('top.inc.php');
     ?>
    <main>
     <!-- Hero Area Start-->
@@ -241,12 +239,12 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                       <input type="text" class="form-control" id="add1" name="address" value="<?php echo $address; ?>" />
                       <span class="help-block" style="color:red;"><?php echo $address_err; ?></span>
                     </div>
-                    <div class="col-md-12 form-group p_star">
+                    <div class="col-md-6 form-group p_star">
                       <label>Town/City</label>
                       <input type="text" class="form-control" id="city" name="city" value="<?php echo $city; ?>" />
                       <span class="help-block" style="color:red;"><?php echo $city_err; ?></span>
                     </div>
-                    <div class="col-md-12 form-group p_star">
+                    <div class="col-md-6 form-group p_star">
                       <!--<select name="country" class="country_select form-control">
                         <option value="Country">Country</option>
                         <option value="USA">USA</option>
@@ -282,7 +280,7 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                         <input type="checkbox" id="f-option3" name="selector" />
                         <label for="f-option3">Ship to a different address?</label>
                       </div>-->
-                      <label>Order Notes</label>
+                      <label>Additional Notes</label>
                       <textarea class="form-control" name="notes" id="message" rows="1"></textarea>
                     </div>
                   </div>
@@ -412,10 +410,10 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                             <div class="footer-tittle">
                                 <h4>Quick Links</h4>
                                 <ul>
-                                    <li><a href="#">About</a></li>
-                                    <li><a href="#"> Offers & Discounts</a></li>
-                                    <li><a href="#"> Get Coupon</a></li>
-                                    <li><a href="#">  Contact Us</a></li>
+                                    <li><a href="">About</a></li>
+                                    <li><a href=""> Offers & Discounts</a></li>
+                                    <li><a href=""> Get Coupon</a></li>
+                                    <li><a href="">  Contact Us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -425,10 +423,16 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                             <div class="footer-tittle">
                                 <h4>New Products</h4>
                                 <ul>
-                                    <li><a href="#">Woman Cloth</a></li>
-                                    <li><a href="#">Fashion Accessories</a></li>
-                                    <li><a href="#"> Man Accessories</a></li>
-                                    <li><a href="#"> Rubber made Toys</a></li>
+                                    <?php
+                                        $statement = "SELECT * FROM products ORDER BY created_at DESC LIMIT 0, 4";
+                                        $products = $database->Read($statement);
+                                        foreach ($products as $product)
+                                        {
+                                    ?>
+                                        <li><a href="product_details?id=<?php echo $product['id']; ?>"><?php echo $product['name']; ?></a></li>
+                                    <?php
+                                        }
+                                    ?>
                                 </ul>
                             </div>
                         </div>
@@ -438,10 +442,10 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
                             <div class="footer-tittle">
                                 <h4>Support</h4>
                                 <ul>
-                                    <li><a href="#">Frequently Asked Questions</a></li>
-                                    <li><a href="#">Terms & Conditions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Report a Payment Issue</a></li>
+                                    <li><a href="">Frequently Asked Questions</a></li>
+                                    <li><a href="">Terms & Conditions</a></li>
+                                    <li><a href="">Privacy Policy</a></li>
+                                    <li><a href="">Report a Payment Issue</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -518,6 +522,7 @@ if ($_SERVER["REQUEST_METHOD"] =="POST")
   <!-- Jquery Plugins, main Jquery -->	
   <script src="./assets/js/plugins.js"></script>
   <script src="./assets/js/main.js"></script>
+  <script src="custom.php"></script>
   
 </body>
 </html>

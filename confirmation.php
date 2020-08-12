@@ -2,6 +2,10 @@
 
 session_start();
 
+include_once("functions/DatabaseClass.php");
+
+$database = new DatabaseClass();
+
 ?>
 
 <!doctype html>

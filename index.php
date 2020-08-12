@@ -78,30 +78,8 @@ $database = new DatabaseClass();
         </section>
         <!--  New Product End -->
 
-        <!--? Gallery Area Start -->
-        <div class="gallery-area">
-            <div class="container container-fluid p-0 fix">
-                <div class="row">
-                    <?php
-                        $statement = "SELECT * FROM products ORDER BY created_at ASC LIMIT 0, 3";
-                        $products = $database->Read($statement);
-                        foreach ($products as $product)
-                        {
-                    ?>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                <div class="single-gallery mb-30">
-                                    <div class="gallery-img big-img" style="background-image: url(assets/img/gallery/<?php echo $product['image']; ?>);"></div>
-                                </div>
-                            </div>
-                    <?php
-                        }
-                    ?>
-                </div>
-            </div>
-        </div>
-        <!-- Gallery Area End -->
         <!--? Popular Items Start -->
-        <div class="popular-items section-padding30">
+        <div class="popular-items">
             <div class="container">
                 <!-- Section tittle -->
                 <div class="row justify-content-center">
